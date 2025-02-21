@@ -1,30 +1,21 @@
 #!/usr/bin/python3
 """ module for function to return top 10 hot posts of a given subreddit """
-from requests import get
-from sys import argv
+import requests
+import sys
+
 
 def top_ten(subreddit):
-    """Prints the titles of the first 10 hot posts for a given subreddit."""
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {'User-Agent': 'MyRedditBot/0.1'}
-    params = {'limit': 10}  # Fetch only the first 10 posts
+    """ Returns: top ten post titles
+        or None if queried subreddit is invalid """
+    headers = {'User-Agent': 'xica369'}
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    parameters = {'limit': 10}
+    response = requests.get(url, headers=headers, allow_redirects=False,
+                            params=parameters)
 
-    response = requests.get(url, headers=headers, params=params, allow_redirects=False)
-
-    if response.status_code != 200:
+    if response.status_code == 200:
+        titles_ = response.json().get('data').get('children')
+        for title_ in titles_:
+            print(title_.get('data').get('title'))
+    else:
         print(None)
-        return
-
-    try:
-        data = response.json()
-        posts = data.get("data", {}).get("children", [])
-
-        if not posts:
-            print(None)
-            return
-
-        for post in posts:
-            print(post["data"]["title"])
-    except ValueError:
-        print(None)
-
