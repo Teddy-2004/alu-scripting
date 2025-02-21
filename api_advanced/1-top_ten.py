@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# get subs
+""" module for function to return top 10 hot posts of a given subreddit """
 from requests import get
 from sys import argv
 
