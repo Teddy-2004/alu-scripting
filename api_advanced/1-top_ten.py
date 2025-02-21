@@ -1,21 +1,29 @@
 #!/usr/bin/python3
-""" module for function to return top 10 hot posts of a given subreddit """
+"""
+A module that prints the titles of the top
+10 hot posts from a subreddit.
+"""
 import requests
-import sys
 
 
 def top_ten(subreddit):
-    """ Returns: top ten post titles
-        or None if queried subreddit is invalid """
-    headers = {'User-Agent': 'xica369'}
-    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    parameters = {'limit': 10}
-    response = requests.get(url, headers=headers, allow_redirects=False,
-                            params=parameters)
+    """
+    A function that fetches and prints the titles
+    of the top ten hot posts from a subreddit.
+    """
+
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=10"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    response = requests.get(url, headers=headers, allow_redirects=False)
 
     if response.status_code == 200:
-        titles_ = response.json().get('data').get('children')
-        for title_ in titles_:
-            print(title_.get('data').get('title'))
+        json = response.json()
+        data = json["data"]["children"]
+
+        for post in data:
+            print(post.get("data", {}).get("title"))
     else:
-        print(None)
+        print("None")
+
+
+# top_ten("sudan")
